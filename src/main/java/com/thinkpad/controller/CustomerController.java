@@ -6,6 +6,7 @@ import com.thinkpad.service.CustomerService;
 import com.thinkpad.service.CustomerServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -40,4 +41,17 @@ public class CustomerController {
 //        redirect.addFlashAttribute("success", "Saved customer successfully!");
 //        return "redirect:/";
 //    }
+
+    @GetMapping("/customer/{id}/edit")
+    public ModelAndView edit(@PathVariable int id) {
+        return new ModelAndView("edit", "customer", customerService.findById(id));
+    }
+
+    @PostMapping("customer/update")
+    public ModelAndView update(Customer customer) {
+        customerService.update(customer.getId(), customer);
+        ModelAndView modelAndView = new ModelAndView("index", "customers", customerService.findAll());
+        modelAndView.addObject("success", "updated");
+        return modelAndView;
+    }
 }
